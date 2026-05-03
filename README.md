@@ -13,6 +13,7 @@ Designed for embedded devices using LVGL with a focus on simplicity and performa
 
 ## Screenshots
 
+
 | Image | Controls | Settings |
 | ------ | ------- | ------- |
 | ![Preview](screenshots/preview.png?raw=true "preview") | ![Controls](screenshots/controls.png?raw=true "controls") | ![Settings](screenshots/settings.png?raw=true "settings") |
@@ -50,10 +51,10 @@ void slideshow_ui_next_triggered_cb(bool shuffle)
     slideshow_ui_subject_set_image(next_image);
 }
 ```
-shuffle: indicates if shuffle mode is enabled in the ui
-next_image can be:
-- lv_image_dsc_t *
-- file path (if using filesystem)
+- shuffle: indicates if shuffle mode is enabled in the ui
+- next_image can be:
+  - lv_image_dsc_t *
+  - file path (if using filesystem)
 
 ### ⚠️ Default Behavior
 

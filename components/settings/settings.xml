@@ -1,0 +1,42 @@
+<component>
+	<previews>
+		<preview width="350" height="350" style_bg_color="0x5c5c5c" />
+	</previews>
+
+	<api>
+		<!-- Add your API here here. For example 
+		<prop name="prop1" type="int" default="0" help="What is this property?"/>
+		-->
+	</api>
+
+	<styles>
+		<style
+			name="style_base"
+			width="350"
+			height="300"
+			bg_color="0xffffff"
+			bg_opa="220"
+			radius="20"
+			layout="flex"
+			flex_flow="column"
+			pad_all="20"
+		/>
+	</styles>
+
+	<view extends="lv_obj">
+		<remove_style_all />
+		<style name="style_base" />
+		<list_item title="Brightness" style_pad_right="15">
+			<lv_slider width="150" min_value="1" max_value="255" bind_value="subject_brightness" />
+		</list_item>
+		<list_item title="Auto-Play">
+			<lv_switch bind_checked="subject_autoplay" />
+		</list_item>
+		<list_item title="Shuffle">
+			<lv_switch bind_checked="subject_shuffle" />
+		</list_item>
+		<list_item title="Interval">
+			<lv_dropdown options="30 secs&#10;1 min&#10;5 min&#10;10 min&#10;20 min" bind_value="subject_interval" />
+		</list_item>
+	</view>
+</component>

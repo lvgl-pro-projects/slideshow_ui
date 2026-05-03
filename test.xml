@@ -1,0 +1,15 @@
+<test>
+	<view extends="screen_main" />
+	<steps>
+		<subject_set subject="subject_autoplay" value="0" />
+
+		<screenshot_compare path="screenshots/preview.png" />
+
+		<subject_set subject="subject_controls" value="1" />
+		<screenshot_compare path="screenshots/controls.png" />
+
+		<subject_set subject="subject_controls" value="0" />
+		<subject_set subject="subject_settings" value="1" />
+		<screenshot_compare path="screenshots/settings.png" />
+	</steps>
+</test>

@@ -1,0 +1,19 @@
+set(LV_EDITOR_PROJECT_SOURCES)
+list(
+  APPEND
+  LV_EDITOR_PROJECT_SOURCES
+  ${CMAKE_CURRENT_LIST_DIR}/components/button/button_gen.c
+  ${CMAKE_CURRENT_LIST_DIR}/components/controls/controls_gen.c
+  ${CMAKE_CURRENT_LIST_DIR}/components/list_item/list_item_gen.c
+  ${CMAKE_CURRENT_LIST_DIR}/components/settings/settings_gen.c
+  ${CMAKE_CURRENT_LIST_DIR}/images/icon_next_data.c
+  ${CMAKE_CURRENT_LIST_DIR}/images/icon_settings_data.c
+  ${CMAKE_CURRENT_LIST_DIR}/images/icon_shuffle_data.c
+  ${CMAKE_CURRENT_LIST_DIR}/images/landscape_1_data.c
+  ${CMAKE_CURRENT_LIST_DIR}/images/landscape_2_data.c
+  ${CMAKE_CURRENT_LIST_DIR}/images/landscape_3_data.c
+  ${CMAKE_CURRENT_LIST_DIR}/images/landscape_4_data.c
+  ${CMAKE_CURRENT_LIST_DIR}/images/landscape_5_data.c
+  ${CMAKE_CURRENT_LIST_DIR}/screens/screen_main/screen_main_gen.c
+  ${CMAKE_CURRENT_LIST_DIR}/slideshow_ui_gen.c
+  ${CMAKE_CURRENT_LIST_DIR}/slideshow_ui.c)

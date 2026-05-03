@@ -1,0 +1,17 @@
+<screen>
+	<view extends="lv_obj" style_bg_color="0x000000">
+		<!-- Add your code here -->
+		<lv_image bind_src="subject_image" />
+
+		<controls align="bottom_mid" y="-50">
+			<bind_flag_if_eq subject="subject_controls" flag="hidden" ref_value="0" />
+		</controls>
+
+		<settings align="center">
+			<bind_flag_if_eq subject="subject_settings" flag="hidden" ref_value="0" />
+		</settings>
+
+		<subject_toggle_event subject="subject_controls" trigger="clicked" />
+		<subject_set_int_event subject="subject_settings" trigger="clicked" value="0" />
+	</view>
+</screen>

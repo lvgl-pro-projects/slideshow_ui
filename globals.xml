@@ -1,0 +1,66 @@
+<globals>
+	<api>
+		<!-- Add <enumdefs> here -->
+	</api>
+
+	<consts>
+		<!-- Add <px>, <int>, <color> etc here -->
+	</consts>
+
+	<styles>
+		<!-- Add <style> tags here -->
+	</styles>
+
+	<subjects>
+		<!-- Add <int>, <string>, or <float> subjects here -->
+		<int
+			name="subject_brightness"
+			value="200"
+			min_value="50"
+			max_value="255"
+			help="Display brightness [set|get|change]"
+		/>
+		<int
+			name="subject_autoplay"
+			value="1"
+			min_value="0"
+			max_value="1"
+			help="Slideshow auto-play [set|get|change]"
+		/>
+		<int
+			name="subject_shuffle"
+			value="0"
+			min_value="0"
+			max_value="1"
+			help="Slideshow shuffle mode [set|get|change]"
+		/>
+		<int
+			name="subject_interval"
+			value="0"
+			min_value="0"
+			max_value="4"
+			help="Slideshow image interval [set|get|change]"
+		/>
+		<int name="subject_image" value="0" help="Slideshow image source [set|get]{pointer}" />
+
+		<int name="subject_controls" value="0" min_value="0" max_value="1" />
+		<int name="subject_settings" value="0" min_value="0" max_value="1" />
+	</subjects>
+
+	<images>
+		<!-- Add <file> or <data> tags here -->
+		<data name="icon_shuffle" src_path="images/shuffle.png" color_format="rgb565a8" />
+		<data name="icon_next" src_path="images/next.png" color_format="rgb565a8" />
+		<data name="icon_settings" src_path="images/settings.png" color_format="rgb565a8" />
+
+		<data name="landscape_1" src_path="images/landscape_1.png" color_format="rgb565" />
+		<data name="landscape_2" src_path="images/landscape_2.png" color_format="rgb565" />
+		<data name="landscape_3" src_path="images/landscape_3.png" color_format="rgb565" />
+		<data name="landscape_4" src_path="images/landscape_4.png" color_format="rgb565" />
+		<data name="landscape_5" src_path="images/landscape_5.png" color_format="rgb565" />
+	</images>
+
+	<fonts>
+		<!-- Add <bin> , <tiny_ttf>, <freetype> tags here -->
+	</fonts>
+</globals>

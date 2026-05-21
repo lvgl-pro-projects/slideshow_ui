@@ -321,7 +321,9 @@ def generate_source(subjects):
         if "set" in s["access"]:
             lines.append(f"void {PROJECT_NAME}_subject_set_{s['short']}({c_type(s['type'])} value)")
             lines.append("{")
+            lines.append(f"    lv_lock();")
             lines.append(f"    {lv_set(s['type'])}(&{s['name']}, value);")
+            lines.append(f"    lv_unlock();")
             lines.append("}\n")
 
     # -------------------------

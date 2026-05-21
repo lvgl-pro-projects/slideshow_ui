@@ -41,27 +41,37 @@ void slideshow_ui_subjects_init(void)
 
 void slideshow_ui_subject_set_brightness(int32_t value)
 {
+    lv_lock();
     lv_subject_set_int(&subject_brightness, value);
+    lv_unlock();
 }
 
 void slideshow_ui_subject_set_autoplay(int32_t value)
 {
+    lv_lock();
     lv_subject_set_int(&subject_autoplay, value);
+    lv_unlock();
 }
 
 void slideshow_ui_subject_set_shuffle(int32_t value)
 {
+    lv_lock();
     lv_subject_set_int(&subject_shuffle, value);
+    lv_unlock();
 }
 
 void slideshow_ui_subject_set_interval(int32_t value)
 {
+    lv_lock();
     lv_subject_set_int(&subject_interval, value);
+    lv_unlock();
 }
 
 void slideshow_ui_subject_set_image(void * value)
 {
+    lv_lock();
     lv_subject_set_pointer(&subject_image, value);
+    lv_unlock();
 }
 
 /**********************

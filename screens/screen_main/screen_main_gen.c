@@ -48,16 +48,16 @@ lv_obj_t * screen_main_create(void)
 
     lv_obj_t * lv_image_0 = lv_image_create(lv_obj_0);
     lv_image_bind_src(lv_image_0, &subject_image);
-    
+
     lv_obj_t * controls_0 = controls_create(lv_obj_0);
     lv_obj_set_align(controls_0, LV_ALIGN_BOTTOM_MID);
     lv_obj_set_y(controls_0, -50);
     lv_obj_bind_flag_if_eq(controls_0, &subject_controls, LV_OBJ_FLAG_HIDDEN, 0);
-    
+
     lv_obj_t * settings_0 = settings_create(lv_obj_0);
     lv_obj_set_align(settings_0, LV_ALIGN_CENTER);
     lv_obj_bind_flag_if_eq(settings_0, &subject_settings, LV_OBJ_FLAG_HIDDEN, 0);
-    
+
     lv_obj_add_subject_toggle_event(lv_obj_0, &subject_controls, LV_EVENT_CLICKED);
     lv_obj_add_subject_set_int_event(lv_obj_0, &subject_settings, LV_EVENT_CLICKED, 0);
 

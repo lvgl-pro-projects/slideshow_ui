@@ -103,8 +103,8 @@ void __attribute__((weak)) slideshow_ui_next_triggered_cb(bool shuffle)
         }
     }
 
-    LV_LOG_WARN("Next pos %d", img_pos);
-    
+    LV_LOG_USER("Next pos %d", img_pos);
+
     slideshow_ui_subject_set_image((void *)images[img_pos]);
 
 }
@@ -213,7 +213,7 @@ static void start_next_timer(void)
         image_next_timer = NULL;
     }
 
-    LV_LOG_WARN("Starting next timer with interval %d ms", interval);
+    LV_LOG_USER("Starting next timer with interval %d ms", interval);
 
    image_next_timer = lv_timer_create(image_next_timer_cb, interval, NULL);
    lv_timer_set_repeat_count(image_next_timer, 1);

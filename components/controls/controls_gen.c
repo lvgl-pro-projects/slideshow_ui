@@ -60,11 +60,11 @@ lv_obj_t * controls_create(lv_obj_t * parent)
     lv_obj_t * button_0 = button_create(lv_obj_0, icon_settings);
     lv_obj_add_subject_set_int_event(button_0, &subject_controls, LV_EVENT_CLICKED, 0);
     lv_obj_add_subject_set_int_event(button_0, &subject_settings, LV_EVENT_CLICKED, 1);
-    
+
     lv_obj_t * button_1 = button_create(lv_obj_0, icon_shuffle);
     lv_obj_bind_checked(button_1, &subject_shuffle);
     lv_obj_add_subject_toggle_event(button_1, &subject_shuffle, LV_EVENT_CLICKED);
-    
+
     lv_obj_t * button_2 = button_create(lv_obj_0, icon_next);
     lv_obj_add_event_cb(button_2, on_next_cb, LV_EVENT_CLICKED, NULL);
 

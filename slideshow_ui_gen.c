@@ -8,7 +8,7 @@
 
 #include "slideshow_ui_gen.h"
 
-#if LV_USE_XML
+#if defined(LV_USE_XML) && LV_USE_XML
 #endif /* LV_USE_XML */
 
 /*********************
@@ -23,9 +23,13 @@
  *  STATIC PROTOTYPES
  **********************/
 
+static void check_font(lv_font_t ** font, const char * name);
+
 /**********************
  *  STATIC VARIABLES
  **********************/
+
+static uint32_t slideshow_ui_target = SLIDESHOW_UI_TARGET_ALL;
 
 /*----------------
  * Translations
@@ -43,25 +47,28 @@
  * Fonts
  *----------------*/
 
+
+
 /*----------------
  * Images
  *----------------*/
 
-const void * icon_shuffle;
+/* Targets: any */
+const void * icon_shuffle = NULL;
 extern const void * icon_shuffle_data;
-const void * icon_next;
+const void * icon_next = NULL;
 extern const void * icon_next_data;
-const void * icon_settings;
+const void * icon_settings = NULL;
 extern const void * icon_settings_data;
-const void * landscape_1;
+const void * landscape_1 = NULL;
 extern const void * landscape_1_data;
-const void * landscape_2;
+const void * landscape_2 = NULL;
 extern const void * landscape_2_data;
-const void * landscape_3;
+const void * landscape_3 = NULL;
 extern const void * landscape_3_data;
-const void * landscape_4;
+const void * landscape_4 = NULL;
 extern const void * landscape_4_data;
-const void * landscape_5;
+const void * landscape_5 = NULL;
 extern const void * landscape_5_data;
 
 /*----------------
@@ -90,25 +97,55 @@ lv_subject_t subject_settings;
 
 void slideshow_ui_init_gen(const char * asset_path)
 {
-    char buf[256];
-
 
     /*----------------
      * Fonts
      *----------------*/
 
 
+
+
     /*----------------
      * Images
      *----------------*/
-    icon_shuffle = &icon_shuffle_data;
-    icon_next = &icon_next_data;
-    icon_settings = &icon_settings_data;
-    landscape_1 = &landscape_1_data;
-    landscape_2 = &landscape_2_data;
-    landscape_3 = &landscape_3_data;
-    landscape_4 = &landscape_4_data;
-    landscape_5 = &landscape_5_data;
+
+    /* Targets: any */
+    #if SLIDESHOW_UI_CHECK_COMPILE_TARGET(SLIDESHOW_UI_TARGET_ALL)
+    if (slideshow_ui_check_target(SLIDESHOW_UI_TARGET_ALL)) {
+        /* icon_shuffle */
+        if (!icon_shuffle) {
+            icon_shuffle = &icon_shuffle_data;
+        }
+        /* icon_next */
+        if (!icon_next) {
+            icon_next = &icon_next_data;
+        }
+        /* icon_settings */
+        if (!icon_settings) {
+            icon_settings = &icon_settings_data;
+        }
+        /* landscape_1 */
+        if (!landscape_1) {
+            landscape_1 = &landscape_1_data;
+        }
+        /* landscape_2 */
+        if (!landscape_2) {
+            landscape_2 = &landscape_2_data;
+        }
+        /* landscape_3 */
+        if (!landscape_3) {
+            landscape_3 = &landscape_3_data;
+        }
+        /* landscape_4 */
+        if (!landscape_4) {
+            landscape_4 = &landscape_4_data;
+        }
+        /* landscape_5 */
+        if (!landscape_5) {
+            landscape_5 = &landscape_5_data;
+        }
+    }
+    #endif
 
     /*----------------
      * Global styles
@@ -141,8 +178,9 @@ void slideshow_ui_init_gen(const char * asset_path)
      * Translations
      *----------------*/
 
-#if LV_USE_XML
+#if defined(LV_USE_XML) && LV_USE_XML
     /* Register widgets */
+
 
     /* Register fonts */
 
@@ -161,7 +199,7 @@ void slideshow_ui_init_gen(const char * asset_path)
 
     /* Register all the global assets so that they won't be created again when globals.xml is parsed.
      * While running in the editor skip this step to update the preview when the XML changes */
-#if LV_USE_XML && !defined(LV_EDITOR_PREVIEW)
+#if defined(LV_USE_XML) && LV_USE_XML && !defined(LV_EDITOR_PREVIEW)
     /* Register images */
     lv_xml_register_image(NULL, "icon_shuffle", icon_shuffle);
     lv_xml_register_image(NULL, "icon_next", icon_next);
@@ -173,13 +211,28 @@ void slideshow_ui_init_gen(const char * asset_path)
     lv_xml_register_image(NULL, "landscape_5", landscape_5);
 #endif
 
-#if LV_USE_XML == 0
+#if defined(LV_USE_XML) && LV_USE_XML == 0
     /*--------------------
      *  Permanent screens
      *-------------------*/
     /* If XML is enabled it's assumed that the permanent screens are created
-     * manaully from XML using lv_xml_create() */
+     * manually from XML using lv_xml_create() */
 #endif
+}
+
+void slideshow_ui_set_target(uint32_t target)
+{
+    slideshow_ui_target = target;
+}
+
+uint32_t slideshow_ui_get_target(void)
+{
+    return slideshow_ui_target;
+}
+
+bool slideshow_ui_check_target(uint32_t target)
+{
+    return (slideshow_ui_target & target) ? true : false;
 }
 
 /* Callbacks */
@@ -194,3 +247,11 @@ void __attribute__((weak)) on_next_cb(lv_event_t * e)
 /**********************
  *   STATIC FUNCTIONS
  **********************/
+
+static void check_font(lv_font_t ** font, const char * name)
+{
+    if (!(*font)) {
+        *font = (lv_font_t *)LV_FONT_DEFAULT;
+        LV_LOG_WARN("font `%s` was not set. Using `LV_FONT_DEFAULT` instead", name);
+    }
+}

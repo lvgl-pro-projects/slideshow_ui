@@ -25,11 +25,36 @@ extern "C" {
     #include "lvgl/lvgl_private.h"
 #endif
 
+#if defined(LV_USE_XML) && LV_USE_XML
+    #include "lv_xml/lv_xml.h"
+#endif
 
+
+
+/* Prototypes for target functions, needed by responsive const definitions */
+
+void slideshow_ui_set_target(uint32_t target);
+uint32_t slideshow_ui_get_target(void);
+bool slideshow_ui_check_target(uint32_t target);
 
 /*********************
  *      DEFINES
  *********************/
+
+#define SLIDESHOW_UI_TARGET_UNDEFINED  (0 << 1)
+#define SLIDESHOW_UI_TARGET_TARGET1    (1 << 1)
+#define SLIDESHOW_UI_TARGET_ALL        0x0FFFFFFF
+
+/* By default compile for all targets, allowing to switch to any targets at runtime */
+#ifndef SLIDESHOW_UI_COMPILE_TARGET
+#define SLIDESHOW_UI_COMPILE_TARGET SLIDESHOW_UI_TARGET_ALL
+#endif
+
+#define SLIDESHOW_UI_CHECK_COMPILE_TARGET(target) (SLIDESHOW_UI_COMPILE_TARGET & (target) ? 1 : 0)
+
+#ifndef LV_XML_EVAL_STRING_BUF_SIZE
+    #define LV_XML_EVAL_STRING_BUF_SIZE 256
+#endif
 
 /**********************
  *      TYPEDEFS
@@ -51,10 +76,14 @@ extern "C" {
  * Fonts
  *----------------*/
 
+
+
+
 /*----------------
  * Images
  *----------------*/
 
+/* Targets: any */
 extern const void * icon_shuffle;
 extern const void * icon_next;
 extern const void * icon_settings;

@@ -1,3 +1,6 @@
 preview-build
 .cache.json
 *err.png
+build
+build-web
+/.cache

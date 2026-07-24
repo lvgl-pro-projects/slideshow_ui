@@ -21,6 +21,10 @@ extern "C" {
     #include "lvgl/lvgl_private.h"
 #endif
 
+#if defined(LV_USE_XML) && LV_USE_XML
+    #include "lv_xml/lv_xml.h"
+#endif
+
 /*********************
  *      DEFINES
  *********************/

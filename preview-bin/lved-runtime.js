@@ -31,13 +31,16 @@ var readyPromise = new Promise((resolve, reject) => {
 
 // Determine the runtime environment we are in. You can customize this by
 // setting the ENVIRONMENT setting at compile time (see settings.js).
-var ENVIRONMENT_IS_WEB = true;
+// Attempt to auto-detect the environment
+var ENVIRONMENT_IS_WEB = typeof window == "object";
 
-var ENVIRONMENT_IS_WORKER = false;
+var ENVIRONMENT_IS_WORKER = typeof WorkerGlobalScope != "undefined";
 
-var ENVIRONMENT_IS_NODE = false;
+// N.b. Electron.js environment is simultaneously a NODE-environment, but
+// also a web environment.
+var ENVIRONMENT_IS_NODE = typeof process == "object" && typeof process.versions == "object" && typeof process.versions.node == "string" && process.type != "renderer";
 
-var ENVIRONMENT_IS_SHELL = false;
+var ENVIRONMENT_IS_SHELL = !ENVIRONMENT_IS_WEB && !ENVIRONMENT_IS_NODE && !ENVIRONMENT_IS_WORKER;
 
 // --pre-jses are emitted after the Module integration code, so that they can
 // refer to Module (if they choose; they can also define Module)
@@ -103,6 +106,15 @@ if (ENVIRONMENT_IS_WEB || ENVIRONMENT_IS_WORKER) {
   if (!(typeof window == "object" || typeof WorkerGlobalScope != "undefined")) throw new Error("not compiled for this environment (did you build to HTML and try to run it not on the web, or set ENVIRONMENT to something - like node - and run it someplace else - like on the web?)");
   {
     // include: web_or_worker_shell_read.js
+    if (ENVIRONMENT_IS_WORKER) {
+      readBinary = url => {
+        var xhr = new XMLHttpRequest;
+        xhr.open("GET", url, false);
+        xhr.responseType = "arraybuffer";
+        xhr.send(null);
+        return new Uint8Array(/** @type{!ArrayBuffer} */ (xhr.response));
+      };
+    }
     readAsync = async url => {
       assert(!isFileURI(url), "readAsync does not work with file:// URLs");
       var response = await fetch(url, {
@@ -186,8 +198,6 @@ var JSFILEFS = "JSFILEFS is no longer included by default; build with -ljsfilefs
 var OPFS = "OPFS is no longer included by default; build with -lopfs.js";
 
 var NODEFS = "NODEFS is no longer included by default; build with -lnodefs.js";
-
-assert(!ENVIRONMENT_IS_WORKER, "worker environment detected but not enabled at build time.  Add `worker` to `-sENVIRONMENT` to enable.");
 
 assert(!ENVIRONMENT_IS_NODE, "node environment detected but not enabled at build time.  Add `node` to `-sENVIRONMENT` to enable.");
 
@@ -5641,13 +5651,13 @@ var JSEvents = {
   }
 };
 
-/** @type {Object} */ var specialHTMLTargets = [ 0, document, window ];
+/** @type {Object} */ var specialHTMLTargets = [ 0, typeof document != "undefined" ? document : 0, typeof window != "undefined" ? window : 0 ];
 
 var maybeCStringToJsString = cString => cString > 2 ? UTF8ToString(cString) : cString;
 
 /** @suppress {duplicate } */ var findEventTarget = target => {
   target = maybeCStringToJsString(target);
-  var domElement = specialHTMLTargets[target] || document.querySelector(target);
+  var domElement = specialHTMLTargets[target] || (typeof document != "undefined" ? document.querySelector(target) : null);
   return domElement;
 };
 
@@ -8591,6 +8601,9 @@ function _emscripten_set_visibilitychange_callback_on_thread(userData, useCaptur
   userData >>>= 0;
   callbackfunc >>>= 0;
   targetThread >>>= 0;
+  if (!specialHTMLTargets[1]) {
+    return -4;
+  }
   return registerVisibilityChangeEventCallback(specialHTMLTargets[1], userData, useCapture, callbackfunc, 21, "visibilitychange", targetThread);
 }
 
@@ -9141,7 +9154,7 @@ function checkIncomingModuleAPI() {
 }
 
 var ASM_CONSTS = {
-  19255300: ($0, $1, $2) => {
+  19267588: ($0, $1, $2) => {
     var w = $0;
     var h = $1;
     var pixels = $2;
@@ -9212,7 +9225,7 @@ var ASM_CONSTS = {
     }
     SDL2.ctx.putImageData(SDL2.image, 0, 0);
   },
-  19256768: ($0, $1, $2, $3, $4) => {
+  19269056: ($0, $1, $2, $3, $4) => {
     var w = $0;
     var h = $1;
     var hot_x = $2;
@@ -9249,19 +9262,19 @@ var ASM_CONSTS = {
     stringToUTF8(url, urlBuf, url.length + 1);
     return urlBuf;
   },
-  19257756: $0 => {
+  19270044: $0 => {
     if (Module["canvas"]) {
       Module["canvas"].style["cursor"] = UTF8ToString($0);
     }
   },
-  19257839: () => {
+  19270127: () => {
     if (Module["canvas"]) {
       Module["canvas"].style["cursor"] = "none";
     }
   },
-  19257908: () => window.innerWidth,
-  19257938: () => window.innerHeight,
-  19257969: $0 => {
+  19270196: () => window.innerWidth,
+  19270226: () => window.innerHeight,
+  19270257: $0 => {
     var str = UTF8ToString($0) + "\n\n" + "Abort/Retry/Ignore/AlwaysIgnore? [ariA] :";
     var reply = window.prompt(str, "i");
     if (reply === null) {
@@ -9269,7 +9282,7 @@ var ASM_CONSTS = {
     }
     return allocate(intArrayFromString(reply), "i8", ALLOC_NORMAL);
   },
-  19258194: () => {
+  19270482: () => {
     if (typeof (AudioContext) !== "undefined") {
       return true;
     } else if (typeof (webkitAudioContext) !== "undefined") {
@@ -9277,7 +9290,7 @@ var ASM_CONSTS = {
     }
     return false;
   },
-  19258341: () => {
+  19270629: () => {
     if ((typeof (navigator.mediaDevices) !== "undefined") && (typeof (navigator.mediaDevices.getUserMedia) !== "undefined")) {
       return true;
     } else if (typeof (navigator.webkitGetUserMedia) !== "undefined") {
@@ -9285,7 +9298,7 @@ var ASM_CONSTS = {
     }
     return false;
   },
-  19258575: $0 => {
+  19270863: $0 => {
     if (typeof (Module["SDL2"]) === "undefined") {
       Module["SDL2"] = {};
     }
@@ -9309,11 +9322,11 @@ var ASM_CONSTS = {
     }
     return SDL2.audioContext === undefined ? -1 : 0;
   },
-  19259127: () => {
+  19271415: () => {
     var SDL2 = Module["SDL2"];
     return SDL2.audioContext.sampleRate;
   },
-  19259195: ($0, $1, $2, $3) => {
+  19271483: ($0, $1, $2, $3) => {
     var SDL2 = Module["SDL2"];
     var have_microphone = function(stream) {
       if (SDL2.capture.silenceTimer !== undefined) {
@@ -9355,7 +9368,7 @@ var ASM_CONSTS = {
       }, have_microphone, no_microphone);
     }
   },
-  19260888: ($0, $1, $2, $3) => {
+  19273176: ($0, $1, $2, $3) => {
     var SDL2 = Module["SDL2"];
     SDL2.audio.scriptProcessorNode = SDL2.audioContext["createScriptProcessor"]($1, 0, $0);
     SDL2.audio.scriptProcessorNode["onaudioprocess"] = function(e) {
@@ -9387,7 +9400,7 @@ var ASM_CONSTS = {
       SDL2.audio.silenceTimer = setInterval(silence_callback, ($1 / SDL2.audioContext.sampleRate) * 1e3);
     }
   },
-  19262063: ($0, $1) => {
+  19274351: ($0, $1) => {
     var SDL2 = Module["SDL2"];
     var numChannels = SDL2.capture.currentCaptureBuffer.numberOfChannels;
     for (var c = 0; c < numChannels; ++c) {
@@ -9406,7 +9419,7 @@ var ASM_CONSTS = {
       }
     }
   },
-  19262668: ($0, $1) => {
+  19274956: ($0, $1) => {
     var SDL2 = Module["SDL2"];
     var buf = $0 >>> 2;
     var numChannels = SDL2.audio.currentOutputBuffer["numberOfChannels"];
@@ -9420,7 +9433,7 @@ var ASM_CONSTS = {
       }
     }
   },
-  19263157: $0 => {
+  19275445: $0 => {
     var SDL2 = Module["SDL2"];
     if ($0) {
       if (SDL2.capture.silenceTimer !== undefined) {
@@ -9778,6 +9791,12 @@ var wasmExports = await createWasm();
 
 var ___wasm_call_ctors = createExportWrapper("__wasm_call_ctors", 0);
 
+var _fflush = createExportWrapper("fflush", 1);
+
+var _malloc = Module["_malloc"] = createExportWrapper("malloc", 1);
+
+var _free = Module["_free"] = createExportWrapper("free", 1);
+
 var _lvrt_emscripten_get_heap_size = Module["_lvrt_emscripten_get_heap_size"] = createExportWrapper("lvrt_emscripten_get_heap_size", 0);
 
 var _lvrt_emscripten_get_heap_max = Module["_lvrt_emscripten_get_heap_max"] = createExportWrapper("lvrt_emscripten_get_heap_max", 0);
@@ -9787,6 +9806,8 @@ var _lvrt_get_lvgl_version = Module["_lvrt_get_lvgl_version"] = createExportWrap
 var _lvrt_initialize = Module["_lvrt_initialize"] = createExportWrapper("lvrt_initialize", 1);
 
 var _lvrt_initialize_headless = Module["_lvrt_initialize_headless"] = createExportWrapper("lvrt_initialize_headless", 2);
+
+var _lvrt_set_simple_theme = Module["_lvrt_set_simple_theme"] = createExportWrapper("lvrt_set_simple_theme", 0);
 
 var _lvrt_process_data = Module["_lvrt_process_data"] = createExportWrapper("lvrt_process_data", 5);
 
@@ -9820,6 +9841,8 @@ var _lvrt_subscribe_subject = Module["_lvrt_subscribe_subject"] = createExportWr
 
 var _lvrt_resize_canvas = Module["_lvrt_resize_canvas"] = createExportWrapper("lvrt_resize_canvas", 2);
 
+var _lvrt_set_target = Module["_lvrt_set_target"] = createExportWrapper("lvrt_set_target", 1);
+
 var _lvrt_cleanup_runtime = Module["_lvrt_cleanup_runtime"] = createExportWrapper("lvrt_cleanup_runtime", 0);
 
 var _lvrt_play_timeline = Module["_lvrt_play_timeline"] = createExportWrapper("lvrt_play_timeline", 1);
@@ -9834,17 +9857,15 @@ var _lvrt_xml_test_run_stop = Module["_lvrt_xml_test_run_stop"] = createExportWr
 
 var _lvrt_health_check = Module["_lvrt_health_check"] = createExportWrapper("lvrt_health_check", 0);
 
+var _get_screenshot = Module["_get_screenshot"] = createExportWrapper("get_screenshot", 3);
+
+var _slideshow_ui_set_target = Module["_slideshow_ui_set_target"] = createExportWrapper("slideshow_ui_set_target", 1);
+
 var _slideshow_ui_init = Module["_slideshow_ui_init"] = createExportWrapper("slideshow_ui_init", 1);
 
 var ___funcs_on_exit = createExportWrapper("__funcs_on_exit", 0);
 
-var _fflush = createExportWrapper("fflush", 1);
-
 var _strerror = createExportWrapper("strerror", 1);
-
-var _malloc = Module["_malloc"] = createExportWrapper("malloc", 1);
-
-var _free = Module["_free"] = createExportWrapper("free", 1);
 
 var _emscripten_stack_init = wasmExports["emscripten_stack_init"];
 
@@ -9866,11 +9887,11 @@ var _emscripten_stack_get_current = wasmExports["emscripten_stack_get_current"];
 function applySignatureConversions(wasmExports) {
   // First, make a copy of the incoming exports object
   wasmExports = Object.assign({}, wasmExports);
-  var makeWrapper_p_ = f => a0 => f(a0) >>> 0;
   var makeWrapper_pp = f => a0 => f(a0) >>> 0;
+  var makeWrapper_p_ = f => a0 => f(a0) >>> 0;
   var makeWrapper_p = f => () => f() >>> 0;
-  wasmExports["strerror"] = makeWrapper_p_(wasmExports["strerror"]);
   wasmExports["malloc"] = makeWrapper_pp(wasmExports["malloc"]);
+  wasmExports["strerror"] = makeWrapper_p_(wasmExports["strerror"]);
   wasmExports["emscripten_stack_get_base"] = makeWrapper_p(wasmExports["emscripten_stack_get_base"]);
   wasmExports["emscripten_stack_get_end"] = makeWrapper_p(wasmExports["emscripten_stack_get_end"]);
   wasmExports["_emscripten_stack_alloc"] = makeWrapper_pp(wasmExports["_emscripten_stack_alloc"]);

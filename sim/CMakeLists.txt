@@ -24,27 +24,11 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
   set(CMAKE_BUILD_TYPE Debug CACHE STRING "Build type" FORCE)
 endif()
 
+# LVGL version to fetch (any git tag or branch from https://github.com/lvgl/lvgl)
+set(LVGL_VERSION "v9.5.0" CACHE STRING "LVGL version (git tag or branch)")
+
 # Folder with the UI exported from LVGL Pro (the parent of this sim/ folder).
 set(UI_DIR "${CMAKE_CURRENT_SOURCE_DIR}/.." CACHE PATH "Folder with the exported UI")
-set(PROJECT_XML "${UI_DIR}/project.xml")
-
-# LVGL version to fetch (any git tag or branch from https://github.com/lvgl/lvgl).
-# By default this follows the exported project's lvgl_version attribute.
-set(_lvgl_version_default "v9.5.0")
-if(EXISTS "${PROJECT_XML}")
-  file(READ "${PROJECT_XML}" _project_xml_for_version)
-  string(REGEX MATCH "<project[^>]*lvgl_version=\"([^\"]+)\"" _ "${_project_xml_for_version}")
-  set(_project_lvgl_version "${CMAKE_MATCH_1}")
-  if(_project_lvgl_version)
-    if(_project_lvgl_version MATCHES "^v")
-      set(_lvgl_version_default "${_project_lvgl_version}")
-    else()
-      set(_lvgl_version_default "v${_project_lvgl_version}")
-    endif()
-  endif()
-endif()
-set(LVGL_VERSION "${_lvgl_version_default}" CACHE STRING "LVGL version (git tag or branch)")
-message(STATUS "Using LVGL ${LVGL_VERSION}")
 
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_STANDARD_REQUIRED ON)
@@ -149,12 +133,12 @@ add_subdirectory(${UI_DIR} ${CMAKE_BINARY_DIR}/ui)
 
 # The generated UI C uses `#include "lvgl.h"` style includes when this is
 # defined, matching the fetched LVGL target's include directories.
-target_compile_definitions(lib-ui PUBLIC LV_LVGL_H_INCLUDE_SIMPLE)
+target_compile_definitions(lib-ui PUBLIC LV_LVGL_H_INCLUDE_SIMPLE LV_SIM_BUILD)
 
 # Derive the UI entry point and window size from the exported project.xml so the
 # simulator stays generic: the library header is "<name>.h" and its init
 # function is "<name>_init".
-file(READ "${PROJECT_XML}" _project_xml)
+file(READ "${UI_DIR}/project.xml" _project_xml)
 string(REGEX MATCH "<project[^>]*name=\"([^\"]+)\"" _ "${_project_xml}")
 set(UI_NAME "${CMAKE_MATCH_1}")
 if(NOT UI_NAME)

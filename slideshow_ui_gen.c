@@ -154,8 +154,8 @@ void slideshow_ui_init_gen(const char * asset_path)
     /*----------------
      * Subjects
      *----------------*/
-    lv_subject_init_int(&subject_brightness, 200);
-    lv_subject_set_min_value_int(&subject_brightness, 50);
+    lv_subject_init_int(&subject_brightness, 255);
+    lv_subject_set_min_value_int(&subject_brightness, 10);
     lv_subject_set_max_value_int(&subject_brightness, 255);
     lv_subject_init_int(&subject_autoplay, 1);
     lv_subject_set_min_value_int(&subject_autoplay, 0);

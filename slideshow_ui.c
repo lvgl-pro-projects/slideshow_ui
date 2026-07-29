@@ -74,6 +74,12 @@ void slideshow_ui_init(const char * asset_path)
     lv_subject_add_observer(&subject_autoplay, autoplay_observer_cb, NULL);
     lv_subject_add_observer(&subject_interval, interval_observer_cb, NULL);
 
+#if defined(LV_EDITOR_PREVIEW) || defined (LV_SIM_BUILD)
+    lv_obj_set_style_bg_color(lv_layer_top(), lv_color_hex(0x000000), 0);
+    lv_obj_set_style_bg_opa(lv_layer_top(), 0, 0);
+#endif
+
+
 #if !defined(LV_EDITOR_PREVIEW)
     lv_screen_load(screen_main_create());
 #endif
@@ -108,6 +114,13 @@ void __attribute__((weak)) slideshow_ui_next_triggered_cb(bool shuffle)
     slideshow_ui_subject_set_image((void *)images[img_pos]);
 
 }
+
+#if defined(LV_EDITOR_PREVIEW) || defined (LV_SIM_BUILD)
+void slideshow_ui_subject_brightness_change(int32_t value)
+{
+    lv_obj_set_style_bg_opa(lv_layer_top(), 255 - value, 0);
+}
+#endif
 
 /**********************
  *   STATIC FUNCTIONS

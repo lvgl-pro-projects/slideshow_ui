@@ -3,6 +3,7 @@
 A minimal image slideshow UI built with LVGL, featuring simple playback controls and configurable settings.
 
 ## Features
+
 - Image slideshow display
 - Auto-play support
 - Shuffle mode
@@ -13,9 +14,8 @@ Designed for embedded devices using LVGL with a focus on simplicity and performa
 
 ## Screenshots
 
-
-| Image | Controls | Settings |
-| ------ | ------- | ------- |
+| Image                                                  | Controls                                                  | Settings                                                  |
+| ------------------------------------------------------ | --------------------------------------------------------- | --------------------------------------------------------- |
 | ![Preview](screenshots/preview.png?raw=true "preview") | ![Controls](screenshots/controls.png?raw=true "controls") | ![Settings](screenshots/settings.png?raw=true "settings") |
 
 ## Try it Online
@@ -23,6 +23,10 @@ Designed for embedded devices using LVGL with a focus on simplicity and performa
 You can preview and interact with the UI directly in your browser via the LVGL online viewer:
 
 https://viewer.lvgl.io/?repo=https://github.com/lvgl-pro-projects/slideshow_ui
+
+Or a live view:
+
+https://htmlpreview.github.io/?https://github.com/lvgl-pro-projects/slideshow_ui/blob/main/preview-bin/web/index.html
 
 ## Integration
 
@@ -51,6 +55,7 @@ void slideshow_ui_next_triggered_cb(bool shuffle)
     slideshow_ui_subject_set_image(next_image);
 }
 ```
+
 - shuffle: indicates if shuffle mode is enabled in the ui
 - next_image can be:
   - lv_image_dsc_t *
@@ -61,6 +66,7 @@ void slideshow_ui_next_triggered_cb(bool shuffle)
 If `slideshow_ui_next_triggered_cb` is not implemented, the UI will fall back to 5 built-in test images for demonstration purposes.
 
 This is useful for:
+
 - quick preview
 - testing UI behavior without integration
 
@@ -84,17 +90,21 @@ void slideshow_ui_subject_brightness_change(int32_t value)
     // Apply brightness to your display driver
 }
 ```
+
 See [`subjects.h`](custom/subjects.h)
 
 5. Configure Defaults / Restore State
 
 You can configure subjects at startup:
+
 ```c
 slideshow_ui_subject_set_brightness(200);
 slideshow_ui_subject_set_autoplay(1);
 slideshow_ui_subject_set_interval(2);
 ```
+
 Or restore values from saved settings.
 
 ### Note
+
 - The UI does not manage image storage — you control the source

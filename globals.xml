@@ -15,8 +15,8 @@
 		<!-- Add <int>, <string>, or <float> subjects here -->
 		<int
 			name="subject_brightness"
-			value="200"
-			min_value="50"
+			value="255"
+			min_value="10"
 			max_value="255"
 			help="Display brightness [set|get|change]"
 		/>
